@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-
 /////////////////// Coros Origin Configuraion /////////////////////////////
 const cors = require("cors");
 const corsOptions = {
@@ -21,8 +20,8 @@ mongoose
     console.log("db connected");
 
     ///////////////// API ROUTES ////////////////
-    app.use("/api", cors(corsOptions), require("./Routes/index"));
-    app.use("/image", cors(corsOptions), require("./storage/file"));
+    app.use("/.netlify/api", cors(corsOptions), require("./Routes/index"));
+    app.use("/.netlify/image", cors(corsOptions), require("./storage/file"));
     // app.use("/api", require("./Routes/attendence"));
     // app.use("/upload", require("./Api/UploadDocs"));
 
