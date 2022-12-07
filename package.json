@@ -19,7 +19,6 @@
     "multer-gridfs-storage": "^5.0.2",
     "multiparty": "^4.2.3",
     "netlify-lambda": "^2.0.15",
-    "nodemon": "^2.0.19",
-    "serverless-http": "^3.1.0"
+    "nodemon": "^2.0.19"
   }
 }
