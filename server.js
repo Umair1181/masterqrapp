@@ -32,6 +32,6 @@ mongoose
 
 ///////////// PORT ENVOIRMENT //////////////////
 const port = process.env.PORT || 5000;
-const server = app.listen(port, () => {
+const servera = app.listen(port, () => {
   console.log(`SERVER RUNNING AT PORT ${port}`);
 });
