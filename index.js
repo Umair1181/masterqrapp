@@ -32,6 +32,10 @@ mongoose
       // return res.status(200).json({ msg: "server running..." });
       res.send("Server Runing");
     });
+  })
+  .catch((err) => {
+    console.log("Db Connection Error");
+    console.log(err.response);
   });
 
 ///////////// PORT ENVOIRMENT //////////////////
