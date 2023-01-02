@@ -14,6 +14,7 @@ app.use(express.json({ parameterLimit: 100000, limit: "50mb" }));
 ///////////////////DATABASE  CONFIGURATION  ///////////////////
 const db = require("./Config/db").mongodbOnline;
 mongoose.set("strictQuery", false);
+console.log("before db connection ");
 mongoose
   .connect(db, { useUnifiedTopology: true, useNewUrlParser: true })
   .then((m) => {
@@ -27,7 +28,8 @@ mongoose
     // app.use("/upload", require("./Api/UploadDocs"));
 
     app.get("/", cors(corsOptions), (req, res) => {
-      res.status(200).send({ msg: "server running..." });
+      console.log("default root ");
+      return res.status(200).json({ msg: "server running..." });
     });
   });
 
