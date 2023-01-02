@@ -13,6 +13,7 @@ app.use(express.json({ parameterLimit: 100000, limit: "50mb" }));
 
 ///////////////////DATABASE  CONFIGURATION  ///////////////////
 const db = require("./Config/db").mongodbOnline;
+mongoose.set("strictQuery", false);
 mongoose
   .connect(db, { useUnifiedTopology: true, useNewUrlParser: true })
   .then((m) => {
