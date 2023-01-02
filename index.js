@@ -27,7 +27,7 @@ mongoose
     // app.use("/upload", require("./Api/UploadDocs"));
 
     app.get("/", cors(corsOptions), (req, res) => {
-      res.status(200).json({ msg: "server running..." });
+      res.status(200).send({ msg: "server running..." });
     });
   });
 
