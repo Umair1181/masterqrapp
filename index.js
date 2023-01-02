@@ -29,7 +29,8 @@ mongoose
 
     app.get("/", cors(corsOptions), (req, res) => {
       console.log("default root ");
-      return res.status(200).json({ msg: "server running..." });
+      // return res.status(200).json({ msg: "server running..." });
+      res.send("Server Runing");
     });
   });
 
