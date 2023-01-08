@@ -25,15 +25,16 @@ const post = async (req, res) => {
     course: data?.course,
   });
   try {
-    let createdSubject = await newCourse
-      .save()
+    let createdEnrolement = await newCourse.save();
+    createdEnrolement = createdEnrolement
       .populate("student")
       .populate("course");
+
     return GeneralConrtller.ResponseObj(
       res,
       200,
       "Enrolment added Successfully",
-      createdSubject,
+      createdEnrolement,
       true
     );
   } catch (error) {
