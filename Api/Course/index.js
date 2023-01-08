@@ -6,6 +6,8 @@ Router.post("/", Validator.post, CourseController.post);
 
 Router.put("/", Validator.update, CourseController.update);
 
+Router.put("/attendence/:courseId", CourseController.updateAttendence);
+
 Router.get("/:_id", CourseController.getSingleCourse);
 
 Router.get("/", CourseController.get);

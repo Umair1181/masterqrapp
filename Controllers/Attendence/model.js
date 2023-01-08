@@ -2,15 +2,19 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const AttendenceSchema = new Schema({
-    student: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "tblstudents"
-    },
-    createdAt: {
-        type: Date,
-        default : Date.now()
-    }
-})
+  student: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "tblstudents",
+  },
+  course: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "tblcourses",
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+});
 
 // AttendenceSchema.set('toJSON', {
 //     transform: function(doc, ret, options) {

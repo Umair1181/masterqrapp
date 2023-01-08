@@ -1,7 +1,7 @@
 const { GeneralConrtller } = require("../generalController");
 
 const post = (req, res, next) => {
-  const { data } = req.body;
+  const data = req.body;
   if (!data?.title) {
     return GeneralConrtller.ResponseObj(res, 400, "Invalid Title", null, false);
   }
@@ -28,7 +28,7 @@ const post = (req, res, next) => {
 };
 
 const update = (req, res, next) => {
-  const { data } = req.body;
+  const data = req.body;
   if (!data?._id) {
     return GeneralConrtller.ResponseObj(res, 400, "Invalid Id", null, false);
   }

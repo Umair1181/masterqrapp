@@ -10,7 +10,7 @@ const getSingle = async (data) => {
   }
 };
 const post = async (req, res) => {
-  const { data } = req.body;
+  const data = req.body;
   if (await getSingle({ student: data?.student, course: data?.course })) {
     return GeneralConrtller.ResponseObj(
       res,
@@ -26,14 +26,14 @@ const post = async (req, res) => {
   });
   try {
     let createdEnrolement = await newCourse.save();
-    createdEnrolement = createdEnrolement
-      .populate("student")
-      .populate("course");
+    // createdEnrolement = createdEnrolement
+    // .populate("student")
+    // .populate("course");
 
     return GeneralConrtller.ResponseObj(
       res,
       200,
-      "Enrolment added Successfully",
+      "Course added Successfully",
       createdEnrolement,
       true
     );
@@ -43,7 +43,7 @@ const post = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const { data } = req.body;
+  const data = req.body;
   if (
     await getSingle({
       student: data?.student,
@@ -88,12 +88,14 @@ const get = async (req, res) => {
   let data = await Enrolment_Model.find()
     .populate("student")
     .populate("course");
+  let total = await Enrolment_Model.count();
   return GeneralConrtller.ResponseObj(
     res,
     data?.length > 0 ? 200 : 400,
     "Enrolments",
     data,
-    data?.length > 0 ? true : false
+    data?.length > 0 ? true : false,
+    total
   );
 };
 
@@ -139,6 +141,25 @@ const getStudentEnrolment = async (req, res) => {
     data?.length > 0 ? true : false
   );
 };
+const getCourceEnrolements = async (req, res) => {
+  let courseId = req.params.courseId;
+  let data = await Enrolment_Model.find({ course: courseId })
+    .populate("student")
+    .populate({
+      path: "course",
+      select: "_id courseCode title subjectId course",
+      populate: { path: "subjectId", select: "_id name subCode" },
+    });
+  let total = await Enrolment_Model.find({ course: courseId }).count();
+  return GeneralConrtller.ResponseObj(
+    res,
+    data?.length > 0 ? 200 : 400,
+    "Enrolments",
+    data,
+    data?.length > 0 ? true : false,
+    total
+  );
+};
 
 module.exports = {
   post,
@@ -148,4 +169,5 @@ module.exports = {
   deleteSingle,
   getSingleEnrolment,
   getStudentEnrolment,
+  getCourceEnrolements,
 };

@@ -10,7 +10,7 @@ const getSingle = async (data) => {
   }
 };
 const post = async (req, res) => {
-  const { data } = req.body;
+  const data = req.body;
   if (await getSingle({ title: data?.title })) {
     return GeneralConrtller.ResponseObj(
       res,
@@ -53,7 +53,7 @@ const post = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const { data } = req.body;
+  const data = req.body;
   if (await getSingle({ title: data?.title, _id: { $ne: data?._id } })) {
     return GeneralConrtller.ResponseObj(
       res,
@@ -113,6 +113,37 @@ const update = async (req, res) => {
   }
 };
 
+const updateAttendence = async (req, res) => {
+  const courseId = req.params.courseId;
+
+  try {
+    let find = await Course_Model.findOne({
+      _id: courseId,
+    });
+    let updated = await Course_Model.findOneAndUpdate(
+      {
+        _id: courseId,
+      },
+      {
+        attendenceMarkingOpen:
+          find.attendenceMarkingOpen == true ? false : true,
+      },
+      {
+        new: true,
+      }
+    ).populate("subjectId", "_id name subCode");
+    return GeneralConrtller.ResponseObj(
+      res,
+      200,
+      "Course Updated Successfully",
+      updated,
+      true
+    );
+  } catch (error) {
+    return GeneralConrtller.ResponseObj(res, 400, "Failed", error, false);
+  }
+};
+
 const get = async (req, res) => {
   let data = await Course_Model.find().populate(
     "subjectId",
@@ -147,6 +178,13 @@ const getSingleCourse = async (req, res) => {
   return GeneralConrtller.ResponseObj(res, 200, "Course", data, true);
 };
 
+const IsCourseAttendeceOpen = async (_id) => {
+  let resp = await Course_Model.findOne({
+    _id: _id,
+  });
+  return resp?.attendenceMarkingOpen;
+};
+
 module.exports = {
   post,
   update,
@@ -154,4 +192,6 @@ module.exports = {
   deleteList,
   deleteSingle,
   getSingleCourse,
+  updateAttendence,
+  IsCourseAttendeceOpen,
 };

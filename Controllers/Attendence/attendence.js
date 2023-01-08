@@ -1,4 +1,5 @@
 const res = require("express/lib/response");
+const { IsCourseAttendeceOpen } = require("../Courses/courses");
 const AttendenceModel = require("./model");
 
 const alreadyMarked = async (id) => {
@@ -11,25 +12,42 @@ const alreadyMarked = async (id) => {
 };
 
 const AddAttendence = async (req, res) => {
-  const data = req.body.data;
+  const data = req.body;
   // let checkAttendence = await alreadyMarked(data?.studentId)
   // if( checkAttendence ){
   //     return res.status(403).json({ msg: "Attendence already Marked", success: false })
   // }else{
   if (data?.studentId) {
-    let newAttendence = new AttendenceModel({
-      student: data?.studentId,
-    });
-    let marked = await newAttendence.save();
-    if (marked) {
-      return res.json({
-        msg: "Attendence Marked Successfully",
-        success: true,
-        results: marked,
+    if (data?.courseId) {
+      let isOpen = await IsCourseAttendeceOpen(data?.courseId);
+      if (isOpen == false) {
+        return res.json({
+          msg: "Attendence Is Closed",
+          success: false,
+          results: null,
+        });
+      }
+      let newAttendence = new AttendenceModel({
+        student: data?.studentId,
+        course: data?.courseId,
       });
+      let marked = await newAttendence.save();
+      if (marked) {
+        return res.json({
+          msg: "Attendence Marked Successfully",
+          success: true,
+          results: marked,
+        });
+      } else {
+        return res.json({
+          msg: "Attendence Mark Failed",
+          success: false,
+          results: null,
+        });
+      }
     } else {
       return res.json({
-        msg: "Attendence Mark Failed",
+        msg: "Invalid Course Id",
         success: false,
         results: null,
       });
@@ -45,13 +63,11 @@ const GetAttendences = async (req, res) => {
     "student",
     "_id firstName lastName regNumber"
   );
-  return res
-    .status(200)
-    .json({
-      msg: "Record",
-      results: attendences,
-      success: attendences?.length > 0 ? true : false,
-    });
+  return res.status(200).json({
+    msg: "Record",
+    results: attendences,
+    success: attendences?.length > 0 ? true : false,
+  });
 };
 
 const deleteRecords = async (req, res) => {
