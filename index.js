@@ -56,9 +56,9 @@ const connectDB = async () => {
 const PORT = process.env.PORT || 3000;
 connectDB().then((conn) => {
   global.mongodbconndbs = conn.connection;
-  //Routes go here
+  //Routes go heress
   app.use("/api", require("./Routes/index"));
-  // app.use("/image", require("./storage/file"));
+  app.use("/image", require("./storage/file"));
   app.all("*", (req, res) => {
     res.json({ "every thing": "is awesome" });
   });

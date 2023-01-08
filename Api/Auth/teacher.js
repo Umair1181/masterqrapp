@@ -2,20 +2,16 @@ const Router = require("express").Router();
 const TeacherController = require("../../Controllers/Teacher/teacher");
 const { upload } = require("../../storage")();
 
+Router.post("/add", upload.single("image"), TeacherController.addTeacher);
 
-Router.post( '/add',  upload.single("image"), TeacherController.addTeacher )
+Router.get("/", TeacherController.allTeachers);
 
+Router.delete("/", TeacherController.removeTeachers);
 
-Router.get( '/', (req, res) => TeacherController.allTeachers(req, res));
+Router.get("/:_id?", TeacherController.getSingleTeacher);
 
-Router.delete( '/', (req, res) => TeacherController.removeTeachers(req, res));
+Router.post("/signin", TeacherController.login);
 
-
-Router.get( '/:_id?', (req, res) => TeacherController.getSingleTeacher(req, res));
-
-Router.post( '/signin', (req, res) => TeacherController.login(req, res));
-
-Router.patch( '/block-unblock/:_id?', (req, res) => TeacherController.block(req, res));
-
+Router.patch("/block-unblock/:_id?", TeacherController.block);
 
 module.exports = Router;

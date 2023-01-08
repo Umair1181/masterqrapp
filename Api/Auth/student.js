@@ -1,23 +1,16 @@
 const Router = require("express").Router();
-
 const StudentController = require("../../Controllers/Student/student");
 
-Router.post( '/signup', (req, res) => StudentController.addStudent(req, res));
+Router.post("/signup", StudentController.addStudent);
 
-Router.post( '/scanqr', (req, res) => StudentController.scanQr(req, res));
+Router.post("/scanqr", StudentController.scanQr);
 
-Router.get( '/', (req, res) => StudentController.allStudents(req, res));
+Router.get("/", StudentController.allStudents);
 
-Router.delete( '/', (req, res) => StudentController.removeStudents(req, res));
+Router.delete("/", StudentController.removeStudents);
 
+Router.get("/:_id?", StudentController.getSingleStudent);
 
-Router.get( '/:_id?', (req, res) => StudentController.getSingleStudent(req, res));
-
-Router.post( '/signin', (req, res) => StudentController.login(req, res));
-
-
-
-
-
+Router.post("/signin", StudentController.login);
 
 module.exports = Router;

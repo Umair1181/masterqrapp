@@ -2,22 +2,14 @@ const Router = require("express").Router();
 const SubjectController = require("../../Controllers/Subject/subject");
 const Validator = require("../../Controllers/Subject/validator");
 
-Router.post( '/',Validator.post, SubjectController.post )
+Router.post("/", Validator.post, SubjectController.post);
 
-Router.put( '/',Validator.update, SubjectController.update )
+Router.put("/", Validator.update, SubjectController.update);
 
-Router.get( '/', SubjectController.get )
+Router.get("/", SubjectController.get);
 
-Router.delete( '/', SubjectController.deleteList )
+Router.delete("/:_id", SubjectController.deleteSingle);
 
-
-
-
-
-// Router.get( '/', SubjectController.GetAttendences )
-
-// Router.delete( '/', SubjectController.deleteRecords )
-
-
+Router.delete("/", SubjectController.deleteList);
 
 module.exports = Router;
