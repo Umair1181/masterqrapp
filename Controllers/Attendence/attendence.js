@@ -2,8 +2,8 @@ const res = require("express/lib/response");
 const { IsCourseAttendeceOpen } = require("../Courses/courses");
 const AttendenceModel = require("./model");
 
-const alreadyMarked = async (id) => {
-  let isFound = await AttendenceModel.findOne({ student: id });
+const alreadyMarked = async (data) => {
+  let isFound = await AttendenceModel.findOne(data);
   if (isFound) {
     return isFound;
   } else {
@@ -19,6 +19,15 @@ const AddAttendence = async (req, res) => {
   // }else{
   if (data?.studentId) {
     if (data?.courseId) {
+      let checkAttendence = await alreadyMarked({
+        student: data?.studentId,
+        course: data?.courseId,
+      });
+      if (checkAttendence) {
+        return res
+          .status(403)
+          .json({ msg: "Attendence Marked", success: false });
+      }
       let isOpen = await IsCourseAttendeceOpen(data?.courseId);
       if (isOpen == false) {
         return res.json({

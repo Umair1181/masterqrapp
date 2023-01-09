@@ -2,7 +2,7 @@ const StudentModel = require("./model");
 // var multiparty = require('multiparty');
 const { GeneralConrtller } = require("../generalController");
 const addStudent = async (req, res) => {
-  let data = req.body.data;
+  let data = req.body;
   console.log("data: ", data);
   // var form = new multiparty.Form();
   // form.parse(req, (err, fields, files) => {
@@ -48,13 +48,11 @@ const scanQr = async (req, res) => {
 const allStudents = async (req, res) => {
   let students = await StudentModel.find();
 
-  return res
-    .status(200)
-    .json({
-      msg: "check: allStudents",
-      success: students?.length > 0 ? true : false,
-      results: students,
-    });
+  return res.status(200).json({
+    msg: "check: allStudents",
+    success: students?.length > 0 ? true : false,
+    results: students,
+  });
 };
 
 const removeStudents = async (req, res) => {
@@ -66,7 +64,7 @@ const removeStudents = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  let data = req.body.data;
+  let data = req.body;
   console.log("input: ", data);
   let fUser = await StudentModel.findOne({ regNumber: data?.regNumber });
   if (fUser) {
@@ -85,13 +83,11 @@ const login = async (req, res) => {
         .json({ msg: "Invalid Password", success: false, results: null });
     }
   } else {
-    return res
-      .status(200)
-      .json({
-        msg: "Invalid Registration Number",
-        success: false,
-        results: null,
-      });
+    return res.status(200).json({
+      msg: "Invalid Registration Number",
+      success: false,
+      results: null,
+    });
   }
 };
 

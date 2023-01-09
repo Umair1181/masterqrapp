@@ -10,7 +10,7 @@ const getSingle = async (data) => {
   }
 };
 const post = async (req, res) => {
-  const { data } = req.body;
+  const data = req.body;
   if (await getSingle({ name: data?.name })) {
     return GeneralConrtller.ResponseObj(
       res,
@@ -48,7 +48,7 @@ const post = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const { data } = req.body;
+  const data = req.body;
   if (await getSingle({ name: data?.name, _id: { $ne: data?._id } })) {
     return GeneralConrtller.ResponseObj(
       res,

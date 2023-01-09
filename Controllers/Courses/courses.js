@@ -149,12 +149,14 @@ const get = async (req, res) => {
     "subjectId",
     "_id name subCode"
   );
+  let total = await Course_Model.count();
   return GeneralConrtller.ResponseObj(
     res,
     data?.length > 0 ? 200 : 400,
     "Courses",
     data,
-    data?.length > 0 ? true : false
+    data?.length > 0 ? true : false,
+    total
   );
 };
 
