@@ -99,12 +99,14 @@ const update = async (req, res) => {
 
 const get = async (req, res) => {
   let data = await Subject_Model.find();
+  let total = await Subject_Model.count();
   return GeneralConrtller.ResponseObj(
     res,
     data?.length > 0 ? 200 : 400,
     "Subjects",
     data,
-    data?.length > 0 ? true : false
+    data?.length > 0 ? true : false,
+    total
   );
 };
 

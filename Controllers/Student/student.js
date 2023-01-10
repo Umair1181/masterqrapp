@@ -47,16 +47,27 @@ const scanQr = async (req, res) => {
 
 const allStudents = async (req, res) => {
   let students = await StudentModel.find();
+  let total = await StudentModel.count();
 
   return res.status(200).json({
-    msg: "check: allStudents",
+    msg: "All Students",
     success: students?.length > 0 ? true : false,
     results: students,
+    total,
   });
 };
 
 const removeStudents = async (req, res) => {
-  // let students = await StudentModel.deleteMany();
+  let students = await StudentModel.deleteMany();
+
+  return res
+    .status(200)
+    .json({ msg: "Removed Successfully", success: true, students: students });
+};
+
+const removeSingleStudents = async (req, res) => {
+  const studentId = req.params.studentId;
+  let students = await StudentModel.deleteOne({ _id: studentId });
 
   return res
     .status(200)
@@ -69,6 +80,11 @@ const login = async (req, res) => {
   let fUser = await StudentModel.findOne({ regNumber: data?.regNumber });
   if (fUser) {
     console.log("fUser?.password: ", fUser?.password);
+    if (fUser.blocked) {
+      return res
+        .status(400)
+        .json({ msg: "Blocked", success: false, results: null });
+    }
     let verfied = await GeneralConrtller.ComparePassword(
       data?.password,
       fUser?.password
@@ -91,11 +107,35 @@ const login = async (req, res) => {
   }
 };
 
+const block = async (req, res) => {
+  let _id = req.params._id;
+  console.log(_id, "_id");
+  try {
+    let fUser = await StudentModel.findOne({ _id: _id });
+    let updated = await StudentModel.findOneAndUpdate(
+      { _id: _id },
+      { blocked: !fUser.blocked },
+      { new: true }
+    );
+    return GeneralConrtller.ResponseObj(
+      res,
+      200,
+      "Updated Successfullfy",
+      updated,
+      true
+    );
+  } catch (error) {
+    return GeneralConrtller.ResponseObj(res, 400, "Failed", error, false);
+  }
+};
+
 module.exports = {
   addStudent,
   scanQr,
   getSingleStudent,
   allStudents,
   removeStudents,
+  removeSingleStudents,
   login,
+  block,
 };

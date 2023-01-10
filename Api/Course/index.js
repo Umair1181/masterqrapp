@@ -4,7 +4,7 @@ const Validator = require("../../Controllers/Courses/validator");
 
 Router.post("/", Validator.post, CourseController.post);
 
-Router.put("/", Validator.update, CourseController.update);
+Router.put("/:_id?", Validator.update, CourseController.update);
 
 Router.put("/attendence/:courseId", CourseController.updateAttendence);
 

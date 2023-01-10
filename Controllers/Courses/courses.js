@@ -35,6 +35,7 @@ const post = async (req, res) => {
     subjectId: data?.subjectId,
     attendenceMarkingOpen: data?.attendenceMarkingOpen,
     qrCodeId: data?.qrCodeId,
+    creditHours: data?.creditHours,
   });
   try {
     let createdSubject = await (
@@ -53,8 +54,9 @@ const post = async (req, res) => {
 };
 
 const update = async (req, res) => {
+  let courseId = req.params._id;
   const data = req.body;
-  if (await getSingle({ title: data?.title, _id: { $ne: data?._id } })) {
+  if (await getSingle({ title: data?.title, _id: { $ne: courseId } })) {
     return GeneralConrtller.ResponseObj(
       res,
       400,
@@ -64,7 +66,7 @@ const update = async (req, res) => {
     );
   }
   if (
-    await getSingle({ courseCode: data?.courseCode, _id: { $ne: data?._id } })
+    await getSingle({ courseCode: data?.courseCode, _id: { $ne: courseId } })
   ) {
     return GeneralConrtller.ResponseObj(
       res,
@@ -76,25 +78,32 @@ const update = async (req, res) => {
   }
 
   let updateCourse = {};
-  updateCourse = data?.title ? { ...updateCourse, title: data?.title } : false;
-  updateCourse = data?.courseCode
-    ? { ...updateCourse, courseCode: data?.courseCode }
-    : false;
-  updateCourse = data?.subjectId
-    ? { ...updateCourse, subjectId: data?.subjectId }
-    : false;
-  updateCourse =
-    data?.attendenceMarkingOpen == true
-      ? { ...updateCourse, attendenceMarkingOpen: true }
-      : { ...updateCourse, attendenceMarkingOpen: false };
-  updateCourse = data?.qrCodeId
-    ? { ...updateCourse, qrCodeId: data?.qrCodeId }
-    : false;
-
+  if (data?.title) {
+    updateCourse = { title: data?.title };
+  }
+  if (data?.courseCode) {
+    updateCourse = { ...updateCourse, courseCode: data?.courseCode };
+  }
+  if (data?.subjectId) {
+    updateCourse = { ...updateCourse, subjectId: data?.subjectId };
+  }
+  if (data?.attendenceMarkingOpen) {
+    updateCourse = { ...updateCourse, attendenceMarkingOpen: true };
+  }
+  if (!data?.attendenceMarkingOpen) {
+    updateCourse = { ...updateCourse, attendenceMarkingOpen: false };
+  }
+  if (data?.qrCodeId) {
+    updateCourse = { ...updateCourse, qrCodeId: data?.qrCodeId };
+  }
+  if (data?.creditHours) {
+    updateCourse = { ...updateCourse, creditHours: data?.creditHours };
+  }
+  console.log("updateCourse: ", updateCourse);
   try {
     let updated = await Course_Model.findOneAndUpdate(
       {
-        _id: data?._id,
+        _id: courseId,
       },
       updateCourse,
       {

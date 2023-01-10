@@ -20,6 +20,10 @@ const CoursesSchema = new Schema({
     type: String,
     default: null,
   },
+  creditHours: {
+    type: Number,
+    default: 2,
+  },
   createdAt: {
     type: Date,
     default: Date.now(),

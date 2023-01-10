@@ -23,13 +23,23 @@ const post = (req, res, next) => {
       false
     );
   }
+  if (!data?.creditHours) {
+    return GeneralConrtller.ResponseObj(
+      res,
+      400,
+      "Invalid Credit Hours",
+      null,
+      false
+    );
+  }
 
   next();
 };
 
 const update = (req, res, next) => {
+  let courseId = req.params._id;
   const data = req.body;
-  if (!data?._id) {
+  if (!courseId) {
     return GeneralConrtller.ResponseObj(res, 400, "Invalid Id", null, false);
   }
   if (!data?.courseCode) {
