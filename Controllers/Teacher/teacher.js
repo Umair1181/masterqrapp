@@ -74,11 +74,12 @@ const getSingleTeacher = async (data) => {
 
 const allTeachers = async (req, res) => {
   let teachers = await TeacherModel.find();
-
+  let total = await TeacherModel.count();
   return res.status(200).json({
     msg: "Teachers",
     success: teachers?.length > 0 ? true : false,
     results: teachers,
+    total: total,
   });
 };
 
@@ -88,7 +89,18 @@ const removeTeachers = async (req, res) => {
   return res.status(200).json({
     msg: "Removed Successfully",
     success: true,
-    teachers: false, // teachers
+    data: teachers, // teachers
+  });
+};
+
+const removeSingleTeacher = async (req, res) => {
+  const teacherId = req.params.teacherId;
+  let removedTeacher = await TeacherModel.deleteOne({ _id: teacherId });
+
+  return res.status(200).json({
+    msg: "Removed Successfully",
+    success: true,
+    data: removedTeacher, // teachers
   });
 };
 
@@ -144,6 +156,7 @@ module.exports = {
   getSingleTeacher,
   allTeachers,
   removeTeachers,
+  removeSingleTeacher,
   login,
   block,
 };

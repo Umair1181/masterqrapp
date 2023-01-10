@@ -6,6 +6,8 @@ Router.post("/add", upload.single("image"), TeacherController.addTeacher);
 
 Router.get("/", TeacherController.allTeachers);
 
+Router.delete("/:teacherId", TeacherController.removeSingleTeacher);
+
 Router.delete("/", TeacherController.removeTeachers);
 
 Router.get("/:_id?", TeacherController.getSingleTeacher);
