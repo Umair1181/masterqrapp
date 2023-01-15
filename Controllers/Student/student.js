@@ -4,6 +4,24 @@ const { GeneralConrtller } = require("../generalController");
 const addStudent = async (req, res) => {
   let data = req.body;
   console.log("data: ", data);
+  if (await getSingleTeacher({ cnic: data?.cnic })) {
+    return res.status(400).json({
+      msg: "Cnic Repeated",
+      success: false,
+      data: null, // gotData
+    });
+  }
+  if (
+    await getSingleTeacher({
+      regNumber: data?.regNumber,
+    })
+  ) {
+    return res.status(400).json({
+      msg: "Registration Number Repeated",
+      success: false,
+      data: null, // gotData
+    });
+  }
   let dimPass = "student123";
   let generatedPass = await GeneralConrtller.PrepPassword(dimPass);
   if (!generatedPass) {
@@ -16,11 +34,10 @@ const addStudent = async (req, res) => {
   let newStudent = new StudentModel({
     firstName: data?.firstName,
     lastName: data?.lastName,
-    // dob:
-    // gender:
-    // image:
-    // resetPassCode:
     regNumber: data?.regNumber,
+    cnic: data?.cnic,
+    city: data?.city,
+    age: data?.age,
     password: generatedPass,
   });
   let createdStudent = await newStudent.save();
@@ -31,7 +48,70 @@ const addStudent = async (req, res) => {
   });
 };
 
-const updateStudent = () => {};
+const updateStudent = async (req, res) => {
+  if (!req.params._id) {
+    return res.status(400).json({
+      msg: "Student Id Missing",
+      success: false,
+      data: null, // gotData
+    });
+  }
+  const studentId = req.params._id;
+  const data = req.body;
+  let toUpdate = {};
+  if (data?.firstName) {
+    toUpdate = { ...toUpdate, firstName: data?.firstName };
+  }
+  if (data?.lastName) {
+    toUpdate = { ...toUpdate, lastName: data?.lastName };
+  }
+  if (data?.regNumber) {
+    toUpdate = { ...toUpdate, regNumber: data?.regNumber };
+  }
+  if (data?.cnic) {
+    toUpdate = { ...toUpdate, cnic: data?.cnic };
+  }
+  if (data?.city) {
+    toUpdate = { ...toUpdate, city: data?.city };
+  }
+  if (data?.age) {
+    toUpdate = { ...toUpdate, age: data?.age };
+  }
+  if (await getSingleStudent({ cnic: data?.cnic, _id: { $ne: studentId } })) {
+    return res.status(400).json({
+      msg: "Cnic Repeated",
+      success: false,
+      data: null, // gotData
+    });
+  }
+  if (
+    await getSingleStudent({
+      regNumber: data?.regNumber,
+      _id: { $ne: studentId },
+    })
+  ) {
+    return res.status(400).json({
+      msg: "Registration Number Repeated",
+      success: false,
+      data: null, // gotData
+    });
+  }
+  let gotData = await TeacherModel.findOneAndUpdate(
+    {
+      _id: studentId,
+    },
+    toUpdate,
+    {
+      new: true,
+    }
+  );
+
+  return res.status(200).json({
+    msg: "Updated Successfully",
+    success: true,
+    data: gotData, // gotData
+  });
+};
 
 const getSingleStudent = async (req, res) => {
   return res.json({ msg: "check" });

@@ -3,7 +3,7 @@ const StudentController = require("../../Controllers/Student/student");
 
 Router.post("/signup", StudentController.addStudent);
 
-Router.put("/", StudentController.updateStudent);
+Router.put("/:_id", StudentController.updateStudent);
 
 Router.post("/scanqr", StudentController.scanQr);
 
