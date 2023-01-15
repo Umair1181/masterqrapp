@@ -68,10 +68,15 @@ const AddAttendence = async (req, res) => {
 };
 
 const GetAttendences = async (req, res) => {
-  let attendences = await AttendenceModel.find().populate(
-    "student",
-    "_id firstName lastName regNumber"
-  );
+  if (!req.params._id) {
+    return res
+      .status(200)
+      .json({ msg: "Course id required", success: true, results: false });
+  }
+  const courseId = req.params._id;
+  let attendences = await AttendenceModel.find({
+    course: courseId,
+  }).populate("student", "_id firstName lastName regNumber");
   return res.status(200).json({
     msg: "Record",
     results: attendences,

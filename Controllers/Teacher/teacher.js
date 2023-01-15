@@ -3,6 +3,9 @@ const { GeneralConrtller } = require("../generalController");
 const TeacherModel = require("./model");
 const addTeacher = async (req, res) => {
   let file = req.file;
+  console.log("req.files: ", req.files);
+  console.log("req.file: ", req.file);
+
   if (!file) {
     return GeneralConrtller.ResponseObj(res, 409, "Image Missing", null, false);
   }
@@ -14,7 +17,7 @@ const addTeacher = async (req, res) => {
 
   let generatedPass = await GeneralConrtller.PrepPassword(dimPass);
   // checking repeated data
-  if (await getSingleTeacher({ $or: [{ cnic: data?.cinc }] })) {
+  if (await getSingleTeacher({ cnic: data?.cnic })) {
     return GeneralConrtller.ResponseObj(
       res,
       403,
@@ -62,7 +65,48 @@ const addTeacher = async (req, res) => {
     );
   }
 };
+const updateTeacher = async (req, res) => {
+  const teacherId = req.params._id;
+  const data = req.body;
+  let toUpdate = {};
+  if (data?.subjectId) {
+    toUpdate = { ...toUpdate, subjectId: data?.subjectId };
+  }
+  if (data?.firstName) {
+    toUpdate = { ...toUpdate, firstName: data?.firstName };
+  }
+  if (data?.lastName) {
+    toUpdate = { ...toUpdate, lastName: data?.lastName };
+  }
+  if (data?.cnic) {
+    toUpdate = { ...toUpdate, cnic: data?.cnic };
+  }
+  if (data?.gender) {
+    toUpdate = { ...toUpdate, gender: data?.gender };
+  }
+  if (await getSingleTeacher({ cnic: data?.cnic, _id: { $ne: teacherId } })) {
+    return res.status(200).json({
+      msg: "Cnic Repeated",
+      success: true,
+      data: null, // gotData
+    });
+  }
+  let gotData = await TeacherModel.findOneAndUpdate(
+    {
+      _id: teacherId,
+    },
+    toUpdate,
+    {
+      new: true,
+    }
+  );
 
+  return res.status(200).json({
+    msg: "Updated Successfully",
+    success: true,
+    data: gotData, // gotData
+  });
+};
 const getSingleTeacher = async (data) => {
   let gotData = await TeacherModel.findOne(data);
   if (gotData) {
@@ -73,7 +117,9 @@ const getSingleTeacher = async (data) => {
 };
 
 const allTeachers = async (req, res) => {
-  let teachers = await TeacherModel.find();
+  let teachers = await TeacherModel.find()
+    .populate("subjectId")
+    .populate("courses");
   let total = await TeacherModel.count();
   return res.status(200).json({
     msg: "Teachers",
@@ -151,12 +197,54 @@ const block = async (req, res) => {
   }
 };
 
+const assignCourse = async (req, res) => {
+  const data = req.body;
+  let foundTeacher = await TeacherModel.findOne({
+    _id: data.teacher,
+  });
+
+  let foundAlreadyAssignCourse = foundTeacher.courses.find(
+    (ls) => ls._id == data.course
+  );
+  if (foundAlreadyAssignCourse) {
+    return GeneralConrtller.ResponseObj(
+      res,
+      200,
+      "Already assigned",
+      false,
+      true
+    );
+  }
+
+  let updated = await TeacherModel.findOneAndUpdate(
+    {
+      _id: data.teacher,
+    },
+    {
+      // courses: data.course,
+    },
+    {
+      new: true,
+    }
+  );
+
+  return GeneralConrtller.ResponseObj(
+    res,
+    200,
+    "Updated Successfullfy",
+    updated,
+    true
+  );
+};
+
 module.exports = {
   addTeacher,
+  updateTeacher,
   getSingleTeacher,
   allTeachers,
   removeTeachers,
   removeSingleTeacher,
   login,
   block,
+  assignCourse,
 };

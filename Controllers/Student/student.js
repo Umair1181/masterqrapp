@@ -4,12 +4,6 @@ const { GeneralConrtller } = require("../generalController");
 const addStudent = async (req, res) => {
   let data = req.body;
   console.log("data: ", data);
-  // var form = new multiparty.Form();
-  // form.parse(req, (err, fields, files) => {
-  //     // fields fields fields
-  //     console.log( "fields: ", fields.email )
-  // });
-  // console.log( "student: ", student );
   let dimPass = "student123";
   let generatedPass = await GeneralConrtller.PrepPassword(dimPass);
   if (!generatedPass) {
@@ -36,6 +30,8 @@ const addStudent = async (req, res) => {
     success: true,
   });
 };
+
+const updateStudent = () => {};
 
 const getSingleStudent = async (req, res) => {
   return res.json({ msg: "check" });
@@ -131,6 +127,7 @@ const block = async (req, res) => {
 
 module.exports = {
   addStudent,
+  updateStudent,
   scanQr,
   getSingleStudent,
   allStudents,

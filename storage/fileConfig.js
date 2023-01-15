@@ -7,6 +7,7 @@ const InitializeStorage = (mongoURI, db, mongo) => {
   const martStorage = new GridFsStorage({
     url: mongoURI,
     file: (req, file) => {
+      console.log("file::::::", file);
       return new Promise((resolve, reject) => {
         require("crypto").randomBytes(16, (err, buf) => {
           if (err) {

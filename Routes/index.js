@@ -8,5 +8,6 @@ Router.use("/course", require("../Api/Course"));
 
 Router.use("/attendence", require("../Api/Attendences/attendence"));
 Router.use("/enrolments", require("../Api/Enrolments"));
+Router.use("/dashboard", require("../Api/Stats/dashboard"));
 
 module.exports = Router;
