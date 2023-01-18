@@ -37,15 +37,29 @@ const addTeacher = async (req, res) => {
     );
   }
   try {
-    let newTeacher = new TeacherModel({
-      firstName: data?.firstName,
-      lastName: data?.lastName,
-      cnic: data?.cnic,
-      gender: data?.gender,
-      subjectId: data.subjectId,
-      image: image,
-      password: generatedPass,
-    });
+    let _newTeacher = {};
+    if (data?.firstName) {
+      _newTeacher = { ..._newTeacher, firstName: data?.firstName };
+    }
+    if (data?.lastName) {
+      _newTeacher = { ..._newTeacher, lastName: data?.lastName };
+    }
+    if (data?.cnic) {
+      _newTeacher = { ..._newTeacher, cnic: data?.cnic };
+    }
+    if (data?.gender) {
+      _newTeacher = { ..._newTeacher, gender: data?.gender };
+    }
+    if (data?.subjectId) {
+      _newTeacher = { ..._newTeacher, subjectId: data?.subjectId };
+    }
+    if (image) {
+      _newTeacher = { ..._newTeacher, image: image };
+    }
+    if (generatedPass) {
+      _newTeacher = { ..._newTeacher, password: generatedPass };
+    }
+    let newTeacher = new TeacherModel(_newTeacher);
     let createdTeacher = await newTeacher.save();
     return GeneralConrtller.ResponseObj(
       res,
