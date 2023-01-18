@@ -17,7 +17,7 @@ const addTeacher = async (req, res) => {
 
   let generatedPass = await GeneralConrtller.PrepPassword(dimPass);
   // checking repeated data
-  if (await getSingleTeacher({ cnic: data?.cnic })) {
+  if (await getSingle({ cnic: data?.cnic })) {
     return GeneralConrtller.ResponseObj(
       res,
       403,
@@ -70,7 +70,7 @@ const updateTeacher = async (req, res) => {
   const data = req.body;
   let toUpdate = {};
   if (data?.subjectId) {
-    toUpdate = { ...toUpdate, subjectId: data?.subjectId };
+    toUpdate = { subjectId: data?.subjectId };
   }
   if (data?.firstName) {
     toUpdate = { ...toUpdate, firstName: data?.firstName };
@@ -84,7 +84,7 @@ const updateTeacher = async (req, res) => {
   if (data?.gender) {
     toUpdate = { ...toUpdate, gender: data?.gender };
   }
-  if (await getSingleTeacher({ cnic: data?.cnic, _id: { $ne: teacherId } })) {
+  if (await getSingle({ cnic: data?.cnic, _id: { $ne: teacherId } })) {
     return res.status(200).json({
       msg: "Cnic Repeated",
       success: true,
@@ -99,7 +99,9 @@ const updateTeacher = async (req, res) => {
     {
       new: true,
     }
-  );
+  )
+    .populate("subjectId")
+    .populate("courses");
 
   return res.status(200).json({
     msg: "Updated Successfully",
@@ -107,7 +109,7 @@ const updateTeacher = async (req, res) => {
     data: gotData, // gotData
   });
 };
-const getSingleTeacher = async (data) => {
+const getSingle = async (data) => {
   let gotData = await TeacherModel.findOne(data);
   if (gotData) {
     return gotData;
@@ -127,6 +129,37 @@ const allTeachers = async (req, res) => {
     results: teachers,
     total: total,
   });
+};
+
+const getSingleTeacher = async (req, res) => {
+  const teacherId = req.params._id;
+  if (teacherId) {
+    let found = await TeacherModel.findOne({ _id: teacherId })
+      .populate("courses")
+      .populate("subjectId");
+    if (found) {
+      return res.status(200).json({
+        msg: "Teacher Found",
+        success: true,
+        results: found,
+        total: 1,
+      });
+    } else {
+      return res.status(404).json({
+        msg: "Teacher Not Found",
+        success: false,
+        results: null,
+        total: 0,
+      });
+    }
+  } else {
+    return res.status(400).json({
+      msg: "Invalid Id",
+      success: false,
+      results: null,
+      total: 0,
+    });
+  }
 };
 
 const removeTeachers = async (req, res) => {
@@ -184,7 +217,9 @@ const block = async (req, res) => {
       { _id: _id },
       { blocked: !fUser.blocked },
       { new: true }
-    );
+    )
+      .populate("subjectId")
+      .populate("courses");
     return GeneralConrtller.ResponseObj(
       res,
       200,
@@ -226,7 +261,9 @@ const assignCourse = async (req, res) => {
     {
       new: true,
     }
-  );
+  )
+    .populate("subjectId")
+    .populate("courses");
 
   return GeneralConrtller.ResponseObj(
     res,

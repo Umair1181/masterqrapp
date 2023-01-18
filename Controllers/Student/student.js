@@ -114,7 +114,32 @@ const updateStudent = async (req, res) => {
 };
 
 const getSingleStudent = async (req, res) => {
-  return res.json({ msg: "check" });
+  const studentId = req.params._id;
+  if (studentId) {
+    let found = await StudentModel.findOne({ _id: studentId });
+    if (found) {
+      return res.status(200).json({
+        msg: "Studentt Found",
+        success: true,
+        results: found,
+        total: 1,
+      });
+    } else {
+      return res.status(404).json({
+        msg: "Student Not Found",
+        success: false,
+        results: null,
+        total: 0,
+      });
+    }
+  } else {
+    return res.status(400).json({
+      msg: "Invalid Id",
+      success: false,
+      results: null,
+      total: 0,
+    });
+  }
 };
 
 const scanQr = async (req, res) => {

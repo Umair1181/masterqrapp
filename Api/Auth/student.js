@@ -7,13 +7,12 @@ Router.put("/:_id", StudentController.updateStudent);
 
 Router.post("/scanqr", StudentController.scanQr);
 
+Router.get("/:_id", StudentController.getSingleStudent);
 Router.get("/", StudentController.allStudents);
 
 Router.delete("/:studentId", StudentController.removeSingleStudents);
 
 Router.delete("/", StudentController.removeStudents);
-
-Router.get("/:_id?", StudentController.getSingleStudent);
 
 Router.post("/signin", StudentController.login);
 
