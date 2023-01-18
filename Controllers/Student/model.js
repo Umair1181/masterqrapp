@@ -8,6 +8,12 @@ const StudentSchema = new Schema({
   lastName: {
     type: String,
   },
+  cnic: {
+    type: String,
+  },
+  address: {
+    type: String,
+  },
   dob: {
     type: Date,
   },

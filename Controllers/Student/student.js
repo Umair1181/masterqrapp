@@ -77,7 +77,7 @@ const updateStudent = async (req, res) => {
   if (data?.age) {
     toUpdate = { ...toUpdate, age: data?.age };
   }
-  if (await getSingleStudent({ cnic: data?.cnic, _id: { $ne: studentId } })) {
+  if (await getSingle({ cnic: data?.cnic, _id: { $ne: studentId } })) {
     return res.status(400).json({
       msg: "Cnic Repeated",
       success: false,
@@ -85,7 +85,7 @@ const updateStudent = async (req, res) => {
     });
   }
   if (
-    await getSingleStudent({
+    await getSingle({
       regNumber: data?.regNumber,
       _id: { $ne: studentId },
     })
@@ -96,7 +96,7 @@ const updateStudent = async (req, res) => {
       data: null, // gotData
     });
   }
-  let gotData = await TeacherModel.findOneAndUpdate(
+  let gotData = await StudentModel.findOneAndUpdate(
     {
       _id: studentId,
     },
@@ -142,6 +142,14 @@ const getSingleStudent = async (req, res) => {
   }
 };
 
+const getSingle = async (data) => {
+  let gotData = await StudentModel.findOne(data);
+  if (gotData) {
+    return gotData;
+  } else {
+    return false;
+  }
+};
 const scanQr = async (req, res) => {
   return res.json({ msg: "check: scanQr" });
 };
@@ -230,6 +238,23 @@ const block = async (req, res) => {
   }
 };
 
+const myupdate = async (req, res) => {
+  const getStudents = await StudentModel.find();
+  let n = Math.floor(Math.random() * 10000000000000 + 1);
+  let gotData = await StudentModel.updateMany(
+    {},
+    {
+      cnic: n,
+      address: "16 Km Main GT Rd, Kala Shah Kaku, Okara, Punjab 39020",
+      dob: "1998-09-08T18:32:11.000Z",
+    },
+    {
+      new: true,
+    }
+  );
+  return GeneralConrtller.ResponseObj(res, 200, "done", null, true);
+};
+
 module.exports = {
   addStudent,
   updateStudent,
@@ -240,4 +265,5 @@ module.exports = {
   removeSingleStudents,
   login,
   block,
+  myupdate,
 };

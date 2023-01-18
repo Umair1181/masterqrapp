@@ -271,7 +271,7 @@ const assignCourse = async (req, res) => {
       _id: data.teacher,
     },
     {
-      // courses: data.course,
+      courses: data.course,
     },
     {
       new: true,
