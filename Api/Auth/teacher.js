@@ -19,4 +19,6 @@ Router.patch("/block-unblock/:_id?", TeacherController.block);
 
 Router.put("/assign-course", TeacherController.assignCourse);
 
+Router.put("/myupdates", TeacherController.myupdates);
+
 module.exports = Router;

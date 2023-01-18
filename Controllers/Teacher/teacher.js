@@ -1,3 +1,4 @@
+const res = require("express/lib/response");
 const { TEACHER_PASS } = require("../consts");
 const { GeneralConrtller } = require("../generalController");
 const TeacherModel = require("./model");
@@ -288,6 +289,25 @@ const assignCourse = async (req, res) => {
   );
 };
 
+const myupdates = async (req, res) => {
+  let updates = await TeacherModel.updateMany(
+    {},
+    {
+      image: {
+        url: "/image/eeb34bbc5fbabb89ece479f18e9f3a3a.jpeg",
+        name: "imgbin-teacher-computer-icons-teacher-tFagkvTgZM96dFFgZRWRrQxkg.jpeg",
+      },
+    }
+  );
+  return GeneralConrtller.ResponseObj(
+    res,
+    200,
+    "Updated Successfullfy",
+    updates,
+    true
+  );
+};
+
 module.exports = {
   addTeacher,
   updateTeacher,
@@ -298,4 +318,5 @@ module.exports = {
   login,
   block,
   assignCourse,
+  myupdates,
 };
