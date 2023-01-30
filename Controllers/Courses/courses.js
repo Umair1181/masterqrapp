@@ -2,7 +2,7 @@ const { GeneralConrtller } = require("../generalController");
 const Course_Model = require("./model");
 
 const getSingle = async (data) => {
-  let gotData = await Course_Model.findOne(data);
+  let gotData = await Course_Model.findOne(data).lean();
   if (gotData) {
     return gotData;
   } else {
@@ -202,6 +202,7 @@ module.exports = {
   get,
   deleteList,
   deleteSingle,
+  getSingle,
   getSingleCourse,
   updateAttendence,
   IsCourseAttendeceOpen,

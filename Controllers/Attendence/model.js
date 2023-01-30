@@ -10,6 +10,9 @@ const AttendenceSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "tblcourses",
   },
+  markInDate: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now(),

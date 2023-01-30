@@ -42,15 +42,15 @@ const update = (req, res, next) => {
   if (!courseId) {
     return GeneralConrtller.ResponseObj(res, 400, "Invalid Id", null, false);
   }
-  if (!data?.courseCode) {
-    return GeneralConrtller.ResponseObj(
-      res,
-      400,
-      "Invalid Subject Code",
-      null,
-      false
-    );
-  }
+  // if (!data?.courseCode) {
+  //   return GeneralConrtller.ResponseObj(
+  //     res,
+  //     400,
+  //     "Invalid Subject Code",
+  //     null,
+  //     false
+  //   );
+  // }
   next();
 };
 
